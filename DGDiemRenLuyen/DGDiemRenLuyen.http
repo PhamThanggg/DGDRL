@@ -1,0 +1,6 @@
+@DGDiemRenLuyen_HostAddress = http://localhost:5199
+
+GET {{DGDiemRenLuyen_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
