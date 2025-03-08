@@ -1,4 +1,6 @@
-﻿using DGDiemRenLuyen.DTOs.Responses;
+﻿using DGDiemRenLuyen.Common;
+using DGDiemRenLuyen.DTOs.Responses;
+using System.Security.Claims;
 
 namespace DGDiemRenLuyen.Services
 {
@@ -8,15 +10,58 @@ namespace DGDiemRenLuyen.Services
         public T2 _dataResponse;
         public T2 _exceptionDataResponse;
         public ApiResponse<T2> _responseResult;
+        private IHttpContextAccessor _httpContextAccessor;
 
         protected BaseService(
+            IHttpContextAccessor httpContextAccessor,
             string successMessageDefault = "")
         {
+            _httpContextAccessor = httpContextAccessor;
             _responseResult = new ApiResponse<T2>()
             {
                 StatusCode = StatusCodes.Status200OK.ToString(),
                 Messages = successMessageDefault
             };
+        }
+
+        public IHttpContextAccessor HttpContextAccessor
+        {
+            get
+            {
+                return _httpContextAccessor;
+            }
+        }
+
+        public string? UserID
+        {
+            get
+            {
+                string userID = GetClaimValue(HttpContextAccessor, ClaimConstant.USER_ID);
+                if (!string.IsNullOrEmpty(userID))
+                {
+                    return userID;
+                }
+                return null;
+            }
+        }
+
+        private string? GetClaimValue(IHttpContextAccessor httpContextAccessor, string claimName)
+        {
+            try
+            {
+                var identity = (ClaimsIdentity)httpContextAccessor.HttpContext.User.Identity;
+                IEnumerable<Claim> claims = identity.Claims;
+                var claimsDetail = claims.FirstOrDefault(c => c.Type == claimName);
+                if (claimsDetail != null)
+                {
+                    return claimsDetail.Value;
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         public abstract void P1GenerateObjects();
@@ -58,7 +103,7 @@ namespace DGDiemRenLuyen.Services
                 return new ApiResponse<T2>
                 {
                     StatusCode = StatusCodes.Status500InternalServerError.ToString(),
-                    Messages = "Lôi xử lý dữ liệu, vui lòng thử lại"
+                    Messages = "Lỗi xử lý dữ liệu, vui lòng thử lại"
                 };
             }
         }

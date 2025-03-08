@@ -11,10 +11,9 @@ public partial class ParentCriterion : BaseEntity
 {
     [Key]
     [Column("id")]
-    [StringLength(255)]
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
 
-    [Column("criteriaName", TypeName = "text")]
+    [Column("criteriaName")]
     public string? CriteriaName { get; set; }
 
     [Column("maxScore")]
@@ -25,6 +24,9 @@ public partial class ParentCriterion : BaseEntity
 
     [Column("isActive")]
     public int? IsActive { get; set; }
+
+    [Column("note")]
+    public string? Note { get; set; }
 
     [InverseProperty("ParentCriteria")]
     public virtual ICollection<ChildCriterion> ChildCriteria { get; set; } = new List<ChildCriterion>();

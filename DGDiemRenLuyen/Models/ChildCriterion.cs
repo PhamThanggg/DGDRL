@@ -7,18 +7,16 @@ using Microsoft.EntityFrameworkCore;
 namespace DGDiemRenLuyen.Models;
 
 [Table("childCriteria")]
-public partial class ChildCriterion
+public partial class ChildCriterion : BaseEntity
 {
     [Key]
     [Column("id")]
-    [StringLength(255)]
-    public string Id { get; set; } = null!;
+    public Guid Id { get; set; }
 
     [Column("parentCriteriaId")]
-    [StringLength(255)]
-    public string? ParentCriteriaId { get; set; }
+    public Guid ParentCriteriaId { get; set; }
 
-    [Column("criteriaName", TypeName = "text")]
+    [Column("criteriaName")]
     public string? CriteriaName { get; set; }
 
     [Column("maxScore")]
@@ -33,11 +31,8 @@ public partial class ChildCriterion
     [Column("isActive")]
     public int? IsActive { get; set; }
 
-    [Column("createdAt", TypeName = "datetime")]
-    public DateTime? CreatedAt { get; set; }
-
-    [Column("updatedAt", TypeName = "datetime")]
-    public DateTime? UpdatedAt { get; set; }
+    [Column("note")]
+    public string? Note { get; set; }
 
     [InverseProperty("ChildCriteria")]
     public virtual ICollection<CriteriaDetail> CriteriaDetails { get; set; } = new List<CriteriaDetail>();

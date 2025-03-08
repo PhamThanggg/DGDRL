@@ -1,12 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DGDiemRenLuyen.DTOs.responses;
+﻿namespace DGDiemRenLuyen.DTOs.responses;
 
 public class ParentCriterionResponse
 {
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     public string? CriteriaName { get; set; }
 
@@ -15,6 +11,8 @@ public class ParentCriterionResponse
     public int? OrderIndex { get; set; }
 
     public int? IsActive { get; set; }
+
+    public string? Note { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

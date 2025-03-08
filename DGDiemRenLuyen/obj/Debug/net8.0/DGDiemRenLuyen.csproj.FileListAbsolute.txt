@@ -137,3 +137,7 @@ D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\obj\Debug\net8.0\refint\DGDiem
 D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\obj\Debug\net8.0\DGDiemRenLuyen.pdb
 D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\obj\Debug\net8.0\DGDiemRenLuyen.genruntimeconfig.cache
 D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\obj\Debug\net8.0\ref\DGDiemRenLuyen.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\obj\Debug\net8.0\DGDiemRenLuyen.sourcelink.json
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\Scrutor.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll

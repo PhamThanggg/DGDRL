@@ -6,7 +6,7 @@ namespace DGDiemRenLuyen.DTOs.requsets;
 public class ParentCriterionRequest
 {
     [Required]
-    public string Id { get; set; }
+    public Guid Id { get; set; }
 
     [Required]
     public string? CriteriaName { get; set; }
@@ -16,6 +16,9 @@ public class ParentCriterionRequest
 
     [Required]
     public int? OrderIndex { get; set; }
+
+    [Required]
+    public string? Note { get; set; }
 
     [Required]
     public int? IsActive { get; set; }

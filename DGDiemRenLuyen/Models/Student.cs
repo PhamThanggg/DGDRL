@@ -32,5 +32,5 @@ public partial class Student
     public virtual Class? Class { get; set; }
 
     [InverseProperty("Student")]
-    public virtual ICollection<Score> Scores { get; set; } = new List<Score>();
+    public virtual ICollection<ScoreStatus> Scores { get; set; } = new List<ScoreStatus>();
 }

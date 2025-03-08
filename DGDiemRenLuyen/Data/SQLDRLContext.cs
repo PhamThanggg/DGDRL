@@ -27,7 +27,7 @@ public partial class SQLDRLContext : DbContext
 
     public virtual DbSet<ParentCriterion> ParentCriteria { get; set; }
 
-    public virtual DbSet<Score> Scores { get; set; }
+    public virtual DbSet<ScoreStatus> Scores { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
@@ -68,7 +68,7 @@ public partial class SQLDRLContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK__parentCr__3213E83F1F9F1016");
         });
 
-        modelBuilder.Entity<Score>(entity =>
+        modelBuilder.Entity<ScoreStatus>(entity =>
         {
             entity.HasKey(e => e.ScoreId).HasName("PK__score__B56A0C8DC3C4958E");
 
@@ -109,9 +109,9 @@ public partial class SQLDRLContext : DbContext
             var entity = (BaseEntity)entry.Entity;
             if (entry.State == EntityState.Added)
             {
-                entity.CreatedAt = DateTime.UtcNow; // Khi tạo mới
+                entity.CreatedAt = DateTime.UtcNow.AddHours(7); // Khi tạo mới
             }
-            entity.UpdatedAt = DateTime.UtcNow; // Khi cập nhật
+            entity.UpdatedAt = DateTime.UtcNow.AddHours(7); ; // Khi cập nhật
         }
 
         return base.SaveChanges();
@@ -127,9 +127,9 @@ public partial class SQLDRLContext : DbContext
             var entity = (BaseEntity)entry.Entity;
             if (entry.State == EntityState.Added)
             {
-                entity.CreatedAt = DateTime.UtcNow; // Khi tạo mới
+                entity.CreatedAt = DateTime.UtcNow.AddHours(7); ; // Khi tạo mới
             }
-            entity.UpdatedAt = DateTime.UtcNow; // Khi cập nhật
+            entity.UpdatedAt = DateTime.UtcNow.AddHours(7); ; // Khi cập nhật
         }
 
         return await base.SaveChangesAsync(cancellationToken);

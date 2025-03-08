@@ -7,8 +7,8 @@ namespace DGDiemRenLuyen.DTOs.Responses
     {
         public string StatusCode { get; set; }
         public string Messages { get; set; }
-        public T Data { get; set; } = default;
         public List<MessageResponseBase> MessagesDetails { get; set; } = new List<MessageResponseBase>();
+        public T Data { get; set; } = default;
 
         public ApiResponse() { }
 
