@@ -15,6 +15,7 @@ namespace DGDiemRenLuyen.Controllers
         private readonly ParentCriterionCreateService _parentCriterionCreateService;
         private readonly ParentCriterionUpdateService _parentCriterionUpdateService;
         private readonly ParentCriterionGetDetailService _parentCriterionGetDetailService;
+        private readonly ParentCriterionGetListDetailService _parentCriterionGetListDetailService;
         private readonly ParentCriterionGetListService _parentCriterionGetListService;
         private readonly ParentCriterionDeleteService _parentCriterionDeleteService;
 
@@ -22,12 +23,14 @@ namespace DGDiemRenLuyen.Controllers
             ParentCriterionCreateService parentCriterionCreateService
             , ParentCriterionUpdateService parentCriterionUpdateService
             , ParentCriterionGetDetailService parentCriterionGetDetailService
+            , ParentCriterionGetListDetailService parentCriterionGetListDetailService
             , ParentCriterionGetListService parentCriterionGetListService
             , ParentCriterionDeleteService parentCriterionDeleteService)
         {
             _parentCriterionCreateService = parentCriterionCreateService;
             _parentCriterionUpdateService = parentCriterionUpdateService;
             _parentCriterionGetDetailService = parentCriterionGetDetailService;
+            _parentCriterionGetListDetailService = parentCriterionGetListDetailService;
             _parentCriterionGetListService = parentCriterionGetListService;
             _parentCriterionDeleteService = parentCriterionDeleteService;
         }
@@ -77,6 +80,16 @@ namespace DGDiemRenLuyen.Controllers
         public IActionResult GetList([FromBody] ParentCriterionGetListRequest parentCriterionGetListRequest)
         {
             var result = _parentCriterionGetListService.Process(parentCriterionGetListRequest);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("get-list-detail")]
+        public IActionResult GetListDetail([FromBody] ParentCriterionGetListDetailRequest parentCriterionGetListDetailRequest)
+        {
+            var result = _parentCriterionGetListDetailService.Process(parentCriterionGetListDetailRequest);
 
             return Ok(result);
         }

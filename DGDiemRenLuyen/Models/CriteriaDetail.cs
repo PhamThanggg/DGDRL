@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace DGDiemRenLuyen.Models;
@@ -36,11 +37,12 @@ public partial class CriteriaDetail : BaseEntity
     [Column("teacherScore")]
     public int? TeacherScore { get; set; }
 
+    [JsonIgnore]
     [ForeignKey("ChildCriteriaId")]
     [InverseProperty("CriteriaDetails")]
     public virtual ChildCriterion? ChildCriteria { get; set; }
 
     [ForeignKey("ScoreId")]
     [InverseProperty("CriteriaDetails")]
-    public virtual ScoreStatus? Score { get; set; }
+    public virtual ScoreStatus? ScoreStatus { get; set; }
 }

@@ -6,11 +6,11 @@ public class ScoreStatusResponse
 {
     public Guid Id { get; set; }
 
-    public Guid studentId { get; set; }
+    public string StudentId { get; set; }
 
-    public Guid timeId { get; set; }
+    public Guid TimeId { get; set; }
 
-    public int? status { get; set; }
+    public int? Status { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 

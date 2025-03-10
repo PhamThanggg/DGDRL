@@ -1,5 +1,4 @@
 ﻿using DGDiemRenLuyen.Data;
-using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 

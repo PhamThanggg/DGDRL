@@ -3,12 +3,12 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DGDiemRenLuyen.Models;
 
-[Table("score")]
+[Table("scoreStatus")]
 public partial class ScoreStatus : BaseEntity
 {
     [Key]
     [Column("scoreId")]
-    public Guid ScoreId { get; set; }
+    public Guid Id { get; set; }
 
     [Column("studentId")]
     [StringLength(255)]
@@ -20,14 +20,14 @@ public partial class ScoreStatus : BaseEntity
     [Column("status")]
     public int? Status { get; set; }
 
-    [InverseProperty("Score")]
+    [InverseProperty("ScoreStatus")]
     public virtual ICollection<CriteriaDetail> CriteriaDetails { get; set; } = new List<CriteriaDetail>();
 
     [ForeignKey("StudentId")]
-    [InverseProperty("Scores")]
+    [InverseProperty("ScoreStatus")]
     public virtual Student? Student { get; set; }
 
     [ForeignKey("TimeId")]
-    [InverseProperty("Scores")]
+    [InverseProperty("ScoreStatus")]
     public virtual Time? Time { get; set; }
 }

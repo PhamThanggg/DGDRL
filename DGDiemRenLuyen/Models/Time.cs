@@ -33,5 +33,5 @@ public partial class Time : BaseEntity
     public string? CreatedBy { get; set; }
 
     [InverseProperty("Time")]
-    public virtual ICollection<ScoreStatus> Scores { get; set; } = new List<ScoreStatus>();
+    public virtual ICollection<ScoreStatus> ScoreStatus { get; set; } = new List<ScoreStatus>();
 }

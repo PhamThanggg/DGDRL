@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 
 namespace DGDiemRenLuyen.Models;
@@ -37,6 +38,7 @@ public partial class ChildCriterion : BaseEntity
     [InverseProperty("ChildCriteria")]
     public virtual ICollection<CriteriaDetail> CriteriaDetails { get; set; } = new List<CriteriaDetail>();
 
+    [JsonIgnore]
     [ForeignKey("ParentCriteriaId")]
     [InverseProperty("ChildCriteria")]
     public virtual ParentCriterion? ParentCriteria { get; set; }

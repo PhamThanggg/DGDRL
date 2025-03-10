@@ -27,7 +27,7 @@ public partial class SQLDRLContext : DbContext
 
     public virtual DbSet<ParentCriterion> ParentCriteria { get; set; }
 
-    public virtual DbSet<ScoreStatus> Scores { get; set; }
+    public virtual DbSet<ScoreStatus> ScoreStatus { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
@@ -60,7 +60,7 @@ public partial class SQLDRLContext : DbContext
 
             entity.HasOne(d => d.ChildCriteria).WithMany(p => p.CriteriaDetails).HasConstraintName("FK__criteriaD__child__46E78A0C");
 
-            entity.HasOne(d => d.Score).WithMany(p => p.CriteriaDetails).HasConstraintName("FK__criteriaD__score__48CFD27E");
+            entity.HasOne(d => d.ScoreStatus).WithMany(p => p.CriteriaDetails).HasConstraintName("FK__criteriaD__score__48CFD27E");
         });
 
         modelBuilder.Entity<ParentCriterion>(entity =>
@@ -70,11 +70,11 @@ public partial class SQLDRLContext : DbContext
 
         modelBuilder.Entity<ScoreStatus>(entity =>
         {
-            entity.HasKey(e => e.ScoreId).HasName("PK__score__B56A0C8DC3C4958E");
+            entity.HasKey(e => e.Id).HasName("PK__score__B56A0C8DC3C4958E");
 
-            entity.HasOne(d => d.Student).WithMany(p => p.Scores).HasConstraintName("FK__score__studentId__4AB81AF0");
+            entity.HasOne(d => d.Student).WithMany(p => p.ScoreStatus).HasConstraintName("FK__score__studentId__4AB81AF0");
 
-            entity.HasOne(d => d.Time).WithMany(p => p.Scores).HasConstraintName("FK__score__timeId__44FF419A");
+            entity.HasOne(d => d.Time).WithMany(p => p.ScoreStatus).HasConstraintName("FK__score__timeId__44FF419A");
         });
 
         modelBuilder.Entity<Student>(entity =>
