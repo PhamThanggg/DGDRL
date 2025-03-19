@@ -2,16 +2,11 @@
 
 namespace DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
 
-public class CriteriaDetailUpdateRequest
+public class CriteriaDetailUploadRequest
 {
     [Required]
     public Guid Id { get; set; }
 
-    public string? Note { get; set; }
-
-    public int? StudentScore { get; set; }
-
-    public int? TeacherScore { get; set; }
-
-    public int? MoniterScore { get; set; }
+    [Required(ErrorMessage = "File PDF không được để trống.")]
+    public IFormFile File { get; set; }
 }

@@ -4,6 +4,8 @@ using DGDiemRenLuyen.Extentions;
 using System.Reflection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using DTOs.ModelValidation;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -13,6 +15,15 @@ builder.Services.AddDbContext<SQLDRLContext>(options =>
     options.UseSqlServer(builder.Configuration["ConnectionStrings:Cnn"]);
 });
 
+// vaidate
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidateModelAttribute>();
+});
+
+// web roof lưu file
+builder.Services.AddSingleton<IWebHostEnvironment>(builder.Environment);
+
 // HttpContext
 builder.Services.AddHttpContextAccessor();
 
@@ -20,7 +31,6 @@ builder.Services.AddHttpContextAccessor();
 builder.Services
     .AddRepositories(Assembly.GetExecutingAssembly())
     .AddServices(Assembly.GetExecutingAssembly());
-
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -66,5 +76,12 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "uploads")),
+    RequestPath = "/uploads"
+});
 
 app.Run();

@@ -18,5 +18,12 @@ namespace DGDiemRenLuyen.Repositories
             return _dbContext.CriteriaDetails
                 .FirstOrDefault(x => x.ChildCriteriaId == childCrteriaId && x.ScoreId == scoreId);
         }
+
+        public List<CriteriaDetail>? FindByScoreIdAndChildCriteriaParentCriterieId(Guid scoreStatusId, Guid parentCriteriaId)
+        {
+            return _dbContext.CriteriaDetails
+                .Where(cd => cd.ScoreId == scoreStatusId && cd.ChildCriteria.ParentCriteriaId == parentCriteriaId)
+                .ToList();
+        }
     }
 }

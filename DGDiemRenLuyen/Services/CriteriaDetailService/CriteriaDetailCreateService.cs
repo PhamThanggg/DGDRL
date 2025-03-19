@@ -2,7 +2,6 @@
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.Models;
-using DGDiemRenLuyen.Repositories;
 using DGDiemRenLuyen.Repositories.Interfaces;
 
 namespace DGDiemRenLuyen.Services.CriteriaDetailService
@@ -58,7 +57,7 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
                 throw new BaseException { Messages = "Đã hết thời đánh giá điểm rèn luyện!" };
             }
 
-            ChildCriterion childCriterion = _childCriteriaRepository.GetById(_dataRequest.ChildCriteriaId);
+            ChildCriterion? childCriterion = _childCriteriaRepository.GetChildCriteriaByIdAndStatus(_dataRequest.ChildCriteriaId, 1);
             if (childCriterion == null)
             {
                 throw new BaseException { Messages = "Không tồn tại tiêu chí với ID : " + _dataRequest.ChildCriteriaId };
@@ -67,15 +66,38 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
             ScoreStatus scoreStatus = _scoreStatusRepository.GetById(_dataRequest.ScoreId);
             if (scoreStatus == null)
             {
-                throw new BaseException { Messages = "Không tồn tại trạng thái điểm ID : " + _dataRequest.ScoreId };
+                throw new BaseException { Messages = "Không tồn tại trạng thái điểm với ID : " + _dataRequest.ScoreId };
             }
 
             // check tồn tại {1 tài khoản trong 1 đợt xét chỉ tạo 1 lần}
             CriteriaDetail? criteriaDetail = _criteriaDetailRepository.FindByChildCriterieIdAndScoreId(childCriterion.Id, scoreStatus.Id);
             if(criteriaDetail != null)
             {
-                throw new BaseException { Messages = "Vui lòng truyền ID để có thể cập nhật"};
+                throw new BaseException { Messages = "Vui lòng nhập ID để có thể cập nhật"};
             }
+
+            // check giới hạn điểm tiêu chí con
+            if(_dataRequest.StudentScore < 0 || _dataRequest.StudentScore > childCriterion.MaxScore)
+            {
+                throw new BaseException { Messages = "Vui lòng nhập điểm số hợp lệ" };
+            }
+
+            // check giới hạn điểm tiêu chí cha
+            int totalScore = _dataRequest.StudentScore ?? 0;
+            List<CriteriaDetail>? criteriaList = _criteriaDetailRepository.FindByScoreIdAndChildCriteriaParentCriterieId(_dataRequest.ScoreId, childCriterion.ParentCriteriaId);
+            if (criteriaList != null)
+            {
+                foreach(CriteriaDetail list in criteriaList)
+                {
+                    totalScore += list.StudentScore ?? 0;
+                }
+            }
+
+            if(totalScore > childCriterion.ParentCriteria.MaxScore)
+            {
+                throw new BaseException { Messages = "Tổng điểm của bạn đã vượt quá số điểm của phần - " + childCriterion.ParentCriteria.CriteriaName };
+            }
+
         }
 
         public override void P3AccessDatabase()

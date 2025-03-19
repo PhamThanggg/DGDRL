@@ -7,8 +7,10 @@ public class ScoreStatusRequest
     [Required]
     public Guid Id { get; set; }
 
+    
     public Guid TimeId { get; set; }
 
+    [MaxLength(255)]
     public string? StudentId { get; set; }
 
     [Required]

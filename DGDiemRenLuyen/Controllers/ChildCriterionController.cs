@@ -57,7 +57,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        //[Authorize]
         [Route("get-list")]
         public IActionResult GetList([FromBody] ChildCriterionGetListRequest childCriterionGetListRequest)
         {

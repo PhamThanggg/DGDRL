@@ -1,5 +1,4 @@
 ﻿using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
-using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.Services.CriteriaDetailService;
@@ -13,17 +12,20 @@ namespace DGDiemRenLuyen.Controllers
     {
         private readonly CriteriaDetailCreateService _criteriaDetailCreateService;
         private readonly CriteriaDetailUpdateService _criteriaDetailUpdateService;
+        private readonly CriteriaDetailUploadService _criteriaDetailUploadService;
         private readonly CriteriaDetailGetDetailService _criteriaDetailGetDetailService;
         private readonly CriteriaDetailDeleteService _criteriaDetailDeleteService;
 
         public CriteriaDetailController(
             CriteriaDetailCreateService criteriaDetailCreateService
             , CriteriaDetailUpdateService criteriaDetailUpdateService
+            , CriteriaDetailUploadService criteriaDetailUploadService
             , CriteriaDetailGetDetailService criteriaDetailGetDetailService
             , CriteriaDetailDeleteService criteriaDetailDeleteService)
         {
             _criteriaDetailCreateService = criteriaDetailCreateService;
             _criteriaDetailUpdateService = criteriaDetailUpdateService;
+            _criteriaDetailUploadService = criteriaDetailUploadService;
             _criteriaDetailGetDetailService = criteriaDetailGetDetailService;
             _criteriaDetailDeleteService = criteriaDetailDeleteService;
         }
@@ -42,6 +44,14 @@ namespace DGDiemRenLuyen.Controllers
         public IActionResult Update([FromBody] CriteriaDetailUpdateRequest criteriaDetailUpdateRequest)
         {
             ApiResponse<CriteriaDetailResponse> result = _criteriaDetailUpdateService.Process(criteriaDetailUpdateRequest);
+            return Ok(result);
+        }
+
+        [Authorize]
+        [HttpPost("upload-proof")]
+        public async Task<IActionResult> UploadCriteriaDetail([FromForm] CriteriaDetailUploadRequest request)
+        {
+            ApiResponse<CriteriaDetailResponse> result = _criteriaDetailUploadService.Process(request);
             return Ok(result);
         }
 

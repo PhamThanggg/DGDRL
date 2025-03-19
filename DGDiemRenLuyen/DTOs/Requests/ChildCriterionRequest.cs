@@ -12,6 +12,7 @@ public class ChildCriterionRequest
     public Guid ParentCriteriaId { get; set; }
 
     [Required]
+    [MaxLength(500)]
     public string? CriteriaName { get; set; }
 
     [Required]
@@ -21,6 +22,7 @@ public class ChildCriterionRequest
     public int? OrderIndex { get; set; }
 
     [Required]
+    [MaxLength(255)]
     public string? Note { get; set; }
 
     [Required]

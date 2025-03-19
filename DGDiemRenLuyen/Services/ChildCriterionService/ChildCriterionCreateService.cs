@@ -38,17 +38,18 @@ namespace DGDiemRenLuyen.Services.ChildCriterionService
 
         public override void P2PostValidation()
         {
-            ParentCriterion parentCriterion = _parentCriteriaRepository.GetById(_dataRequest.ParentCriteriaId);
+            ParentCriterion? parentCriterion = _parentCriteriaRepository.GetParentCriteriaByIdAndStatus(_dataRequest.ParentCriteriaId, 1);
             if(parentCriterion == null)
             {
                 throw new BaseException { Messages = "Không tồn tại tiêu chí cha với ID : " + _dataRequest.ParentCriteriaId };
             }
 
-            if(_childCriteriaRepository.ExistsBy(pc => pc.CriteriaName == _dataRequest.CriteriaName))
+            if(_childCriteriaRepository.ExistsByNameAndParentCriteriaId(_dataRequest.CriteriaName, parentCriterion.Id))
             {
                 throw new BaseException { Messages = "Tên tiêu chí tồn tại." };
             }
-            if(_childCriteriaRepository.ExistsBy(pc => pc.OrderIndex == _dataRequest.OrderIndex))
+
+            if(_childCriteriaRepository.ExistsByOrderIndexAndParentCriteriaId(_dataRequest.OrderIndex ?? 1, parentCriterion.Id))
             {
                 throw new BaseException { Messages = "Thứ tự xuất hiện đã tồn tại." };
             }

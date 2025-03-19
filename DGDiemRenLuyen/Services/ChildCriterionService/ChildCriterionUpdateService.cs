@@ -44,15 +44,18 @@ namespace DGDiemRenLuyen.Services.ChildCriterionService
         {
             if (checkCriteriaNameUpdate)
             {
-                if (_childCriteriaRepository.ExistsBy(pc => pc.CriteriaName == _dataRequest.CriteriaName))
+                if (_childCriteriaRepository.ExistsByNameAndParentCriteriaId
+                    (_dataRequest.CriteriaName, updateChildCriterion.ParentCriteriaId))
                 {
                     throw new BaseException { Messages = "Tên tiêu chí tồn tại." };
                 }
+                
             }
 
             if (checkOrderIndexUpdate)
             {
-                if (_childCriteriaRepository.ExistsBy(pc => pc.OrderIndex == _dataRequest.OrderIndex))
+                if (_childCriteriaRepository.ExistsByOrderIndexAndParentCriteriaId
+                    (_dataRequest.OrderIndex ?? 1, updateChildCriterion.ParentCriteriaId))
                 {
                     throw new BaseException { Messages = "Thứ tự xuất hiện đã tồn tại." };
                 }

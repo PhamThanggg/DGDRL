@@ -3,6 +3,7 @@ using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Metadata.Ecma335;
 
 namespace DGDiemRenLuyen.Repositories
 {
@@ -13,6 +14,12 @@ namespace DGDiemRenLuyen.Repositories
         public ParentCriteriaRepository(SQLDRLContext dbContext) : base(dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public ParentCriterion? GetParentCriteriaByIdAndStatus(Guid id, int isActive)
+        {
+            return _dbContext.ParentCriteria
+                .FirstOrDefault(x => x.Id == id && x.IsActive == isActive);
         }
 
         public async Task<List<ParentCriterion>> GetParentCriteriaByStudentIdAsync(String studentId, Guid timeId)

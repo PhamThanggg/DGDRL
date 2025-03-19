@@ -9,5 +9,6 @@ public class ParentCriterionGetListDetailRequest
     public Guid TimeId { get; set; }
 
     [Required]
+    [MaxLength(255)]
     public string? UserId { get; set; }
 }
