@@ -1,4 +1,5 @@
-﻿using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
+﻿using DGDiemRenLuyen.Common;
+using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.Services.CriteriaDetailService;
@@ -31,7 +32,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.SV)]
         [Route("create")]
         public IActionResult Create([FromBody] CriteriaDetailRequest criteriaDetailRequest) {
             ApiResponse<CriteriaDetailResponse> result = _criteriaDetailCreateService.Process(criteriaDetailRequest);
@@ -47,7 +48,7 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = RoleConstants.SV)]
         [HttpPost("upload-proof")]
         public async Task<IActionResult> UploadCriteriaDetail([FromForm] CriteriaDetailUploadRequest request)
         {
@@ -73,14 +74,14 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }*/
 
-        [Authorize]
+        /*[Authorize]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid? id)
         {
             ApiResponse<string> result = _criteriaDetailDeleteService.Process(id);
 
             return Ok(result);
-        }
+        }*/
 
 
     }

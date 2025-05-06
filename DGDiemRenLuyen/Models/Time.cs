@@ -22,10 +22,10 @@ public partial class Time : BaseEntity
     [Column("endYear")]
     public int? EndYear { get; set; }
 
-    [Column("startDate", TypeName = "date")]
+    [Column("startDate", TypeName = "datetime")]
     public DateTime? StartDate { get; set; }
 
-    [Column("endDate", TypeName = "date")]
+    [Column("endDate", TypeName = "datetime")]
     public DateTime? EndDate { get; set; }
 
     [Column("createdBy")]

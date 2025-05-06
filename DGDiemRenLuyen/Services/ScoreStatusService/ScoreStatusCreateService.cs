@@ -21,7 +21,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
             _timeRepository = timeRepository;
         }
 
-        public ScoreStatusResponse create(string UserID)
+        public ScoreStatus create(string UserID)
         {
             // kiểm tra thời gian xét có tồn tại k?
             Time? timeData = _timeRepository.GetCurrentTimeRecords();
@@ -37,7 +37,9 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
                 Id = newID,
                 StudentId = UserID,
                 TimeId = timeData.Id,
-                Status = 0
+                Status = 0,
+                SeductedPoint = 0,
+                PlusPoint = 0
              };
 
             if (_scoreStatusRepository.ExistsByStudentIdAndTimeId(UserID, timeId))
@@ -52,15 +54,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
 
             if (newScoreStatus != null)
             {
-                return new ScoreStatusResponse
-                {
-                    Id = newScoreStatus.Id,
-                    StudentId = newScoreStatus.StudentId,
-                    TimeId = newScoreStatus.TimeId,
-                    Status = newScoreStatus.Status,
-                    CreatedAt = newScoreStatus.CreatedAt,
-                    UpdatedAt = newScoreStatus.UpdatedAt,
-                };
+                return newScoreStatus;
 
             }
 

@@ -32,5 +32,12 @@ namespace DGDiemRenLuyen.Repositories
                         .Include(cc  => cc.ParentCriteria)
                         .FirstOrDefault(c => c.Id == id && c.IsActive == isActive);
         }
+
+        public void UpdateIsActiveByParentCriteriaId(int? isActive, Guid parentCriteriaId)
+        {
+            _dbContext.ChildCriteria
+               .Where(c => c.ParentCriteriaId == parentCriteriaId)
+               .ExecuteUpdate(setters => setters.SetProperty(c => c.IsActive, isActive));
+        }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
+using DGDiemRenLuyen.Repositories;
 using DGDiemRenLuyen.Repositories.Interfaces;
 
 namespace DGDiemRenLuyen.Services.ScoreStatusService
@@ -7,7 +9,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
     public class ScoreStatusDeleteService : BaseService<Guid?, string>
     {
         private readonly IScoreStatusRepository _scoreStatusRepository;
-
+        private readonly ICriteriaDetailRepository _criteriaDetailRepository;
 
         public ScoreStatusDeleteService(
            IScoreStatusRepository scoreStatusRepository,
@@ -28,11 +30,20 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
                 throw new BaseException { Messages = "Id không đúng!" };
             }
 
-            ScoreStatus parentCriterion = _scoreStatusRepository.GetById(_dataRequest);
+            ScoreStatus scoreStatus = _scoreStatusRepository.GetById(_dataRequest);
 
-            if ((parentCriterion == null) || (parentCriterion.Id == null))
+            if ((scoreStatus == null) || (scoreStatus.Id == null))
             {
                 throw new BaseException { Messages = "Id không tồn tại đúng!" };
+            }
+
+            CriteriaDetail criteriaDetail = _criteriaDetailRepository
+              .GetBy(s => s.ChildCriteriaId == scoreStatus.Id)
+              .FirstOrDefault();
+
+            if (criteriaDetail != null)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.VALID_RFR };
             }
         }
 
@@ -45,7 +56,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
 
         public override void P4GenerateResponseData()
         {
-            _dataResponse = "Xóa thành công!";
+            _dataResponse = ValidationKeyWords.DELETE.ToString();
 
         }
     }

@@ -45,6 +45,19 @@ namespace DGDiemRenLuyen.Services
             }
         }
 
+        public string? Role
+        {
+            get
+            {
+                string role = GetClaimValue(HttpContextAccessor, ClaimConstant.ROLE);
+                if (!string.IsNullOrEmpty(role))
+                {
+                    return role;
+                }
+                return null;
+            }
+        }
+
         private string? GetClaimValue(IHttpContextAccessor httpContextAccessor, string claimName)
         {
             try

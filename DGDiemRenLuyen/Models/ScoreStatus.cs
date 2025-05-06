@@ -20,12 +20,17 @@ public partial class ScoreStatus : BaseEntity
     [Column("status")]
     public int? Status { get; set; }
 
+    [Column("seductedPoint")]
+    public int? SeductedPoint { get; set; }
+
+    [Column("plusPoint")]
+    public int? PlusPoint { get; set; }
+
+    [Column("note")]
+    public string? Note { get; set; }
+
     [InverseProperty("ScoreStatus")]
     public virtual ICollection<CriteriaDetail> CriteriaDetails { get; set; } = new List<CriteriaDetail>();
-
-    [ForeignKey("StudentId")]
-    [InverseProperty("ScoreStatus")]
-    public virtual Student? Student { get; set; }
 
     [ForeignKey("TimeId")]
     [InverseProperty("ScoreStatus")]

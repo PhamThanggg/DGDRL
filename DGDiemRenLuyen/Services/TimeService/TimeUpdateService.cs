@@ -1,6 +1,7 @@
 ﻿using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -18,7 +19,8 @@ namespace DGDiemRenLuyen.Services.TimeService
 
         public TimeUpdateService(
             ITimeRepository timeRepository,
-            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            string successMessageDefault = ValidationKeyWords.UPDATE) : base(httpContextAccessor, successMessageDefault)
         {
             _timeRepository = timeRepository;
         }

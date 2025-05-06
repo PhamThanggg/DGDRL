@@ -1,6 +1,8 @@
-﻿using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
+﻿using DGDiemRenLuyen.Common;
+using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 
@@ -23,7 +25,8 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
             ICriteriaDetailRepository criteriaDetailRepository,
             IChildCriteriaRepository childCriteriaRepository,
             ITimeRepository timeRepository,
-            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            string successMessageDefault = ValidationKeyWords.UPDATE) : base(httpContextAccessor, successMessageDefault)
         {
             _criteriaDetailRepository = criteriaDetailRepository;
             _childCriteriaRepository = childCriteriaRepository;
@@ -38,25 +41,43 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
                 throw new BaseException { Messages = "Chi tiết diểm rèn luyên không tồn tại. ID: " + _dataRequest.Id };
             }
 
+            // begin authorize
+            if(Role == RoleConstants.SV)
+            {
+                if(UserID != updateCriteriaDetail.ScoreStatus.StudentId)
+                {
+                    throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+                }
+            }
+            // end
+
+
             checkStudentScoreUpdate = _dataRequest.StudentScore != null && _dataRequest.StudentScore != updateCriteriaDetail.StudentScore;
             checkMoniterScoreUpdate = _dataRequest.MoniterScore != null && _dataRequest.MoniterScore != updateCriteriaDetail.MoniterScore;
             checkTeacherScoreUpdate = _dataRequest.TeacherScore != null && _dataRequest.TeacherScore != updateCriteriaDetail.TeacherScore;
 
             // chưa phân quyền {chỉ đúng người mới sửa điểm...}
             updateCriteriaDetail.Note = _dataRequest.Note ?? updateCriteriaDetail.Note;
-            updateCriteriaDetail.StudentScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
-            updateCriteriaDetail.MoniterScore = _dataRequest.MoniterScore ?? updateCriteriaDetail.MoniterScore;
-            updateCriteriaDetail.TeacherScore = _dataRequest.TeacherScore ?? updateCriteriaDetail.TeacherScore;
+            if (Role == RoleConstants.SV)
+            {
+                updateCriteriaDetail.StudentScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+                updateCriteriaDetail.MoniterScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+                updateCriteriaDetail.TeacherScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+            }
+            else if(Role == RoleConstants.CBL)
+            {
+                updateCriteriaDetail.MoniterScore = _dataRequest.MoniterScore ?? updateCriteriaDetail.MoniterScore;
+                updateCriteriaDetail.TeacherScore = _dataRequest.MoniterScore ?? updateCriteriaDetail.MoniterScore;
+            }
+            else if(Role == RoleConstants.GV)
+            {
+                updateCriteriaDetail.TeacherScore = _dataRequest.TeacherScore ?? updateCriteriaDetail.TeacherScore;
+            }
 
         }
 
         public override void P2PostValidation()
         {
-            if (string.IsNullOrEmpty(UserID))
-            {
-                throw new BaseException { Messages = "Bạn không có quyền truy cập" };
-            }
-
             Time? timeData = _timeRepository.GetCurrentTimeRecords();
 
             if (timeData == null)

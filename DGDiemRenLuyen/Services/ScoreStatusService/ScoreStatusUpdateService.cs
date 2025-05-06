@@ -1,9 +1,10 @@
-﻿using DGDiemRenLuyen.DTOs.requsets;
+﻿using DGDiemRenLuyen.Common;
+using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace DGDiemRenLuyen.Services.ScoreStatusService
 {
@@ -14,7 +15,8 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
 
         public ScoreStatusUpdateService(
             IScoreStatusRepository scoreStatusRepository,
-            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            string successMessageDefault = ValidationKeyWords.UPDATE) : base(httpContextAccessor, successMessageDefault)
         {
             _scoreStatusRepository = scoreStatusRepository;
         }
@@ -24,21 +26,46 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
             updateScoreStatus = _scoreStatusRepository.GetById<Guid?>(_dataRequest.Id);
             if(updateScoreStatus == null)
             {
-                throw new BaseException { Messages = "Điểm rèn luyên không tồn tại." };
+                throw new BaseException { Messages = "Điểm rèn luyện không tồn tại." };
             }
 
-            // chưa phân quyền {trạng thái duyệt}
             updateScoreStatus.Status = _dataRequest.status ?? updateScoreStatus.Status;
 
+            updateScoreStatus.SeductedPoint = _dataRequest.SeductedPoint ?? updateScoreStatus.SeductedPoint;
+            updateScoreStatus.PlusPoint = _dataRequest.PlusPoint ?? updateScoreStatus.PlusPoint;
+            updateScoreStatus.Note = _dataRequest.Note ?? updateScoreStatus.Note;
         }
 
         public override void P2PostValidation()
         {
-            /*if (string.IsNullOrEmpty(UserID))
+            // begin phan quyen
+            // Trang thai
+            if (_dataRequest.status > ScoreStatusConstants.SV && Role == RoleConstants.SV)
             {
-                throw new BaseException { Messages = "Bạn không có quyền truy cập" };
-            }*/
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            else if (_dataRequest.status > ScoreStatusConstants.GV && Role == RoleConstants.GV)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            else if (_dataRequest.status > ScoreStatusConstants.CBL && Role == RoleConstants.CBL)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            else if (_dataRequest.status > ScoreStatusConstants.TK && Role == RoleConstants.TK)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
 
+            if (Role == RoleConstants.SV && 
+                    (_dataRequest.SeductedPoint != null 
+                    || _dataRequest.PlusPoint != null 
+                    || !string.IsNullOrWhiteSpace(_dataRequest.Note))
+               )
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            // end
         }
 
         public override void P3AccessDatabase()
@@ -56,10 +83,13 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
             {
                 _dataResponse = new ScoreStatusResponse
                 {
-                    Id = updateScoreStatus.Id,
-                    StudentId = updateScoreStatus.StudentId,
+                    ScoreStatusId = updateScoreStatus.Id,
+                    StudentID = updateScoreStatus.StudentId,
                     TimeId = updateScoreStatus.TimeId,
                     Status = updateScoreStatus.Status,
+                    SeductedPoint = updateScoreStatus.SeductedPoint,
+                    PlusPoint = updateScoreStatus.PlusPoint,
+                    Note = updateScoreStatus.Note,
                     CreatedAt = updateScoreStatus.CreatedAt,
                     UpdatedAt = updateScoreStatus.UpdatedAt,
                 };

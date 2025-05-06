@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ysSDoUf4VOChGdInAf7ZTAZKfd28ChaCp9/Q14+C7uPLeC64vsQDTL7EheG0LNS8VUl2cGk2e1P+UTDgeHy6uw==",
+  "dgSpecHash": "i2o+X/PXlq/rfedWzLjJ5BxcP2YKc1JF5mJLoV6hvmn8uEaoEf3XvvYe0ubTVr/O6IdOoEcOvFFaF41Yi+sWnw==",
   "success": true,
   "projectFilePath": "D:\\ThucTap_HNUE\\DRL\\DGDiemRenLuyen\\DGDiemRenLuyen\\DGDiemRenLuyen.csproj",
   "expectedPackageFiles": [
@@ -45,7 +45,11 @@
     "C:\\Users\\HUY THANG\\.nuget\\packages\\microsoft.sqlserver.server\\1.0.0\\microsoft.sqlserver.server.1.0.0.nupkg.sha512",
     "C:\\Users\\HUY THANG\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
     "C:\\Users\\HUY THANG\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\HUY THANG\\.nuget\\packages\\pdfsharpcore\\1.3.67\\pdfsharpcore.1.3.67.nupkg.sha512",
     "C:\\Users\\HUY THANG\\.nuget\\packages\\scrutor\\6.0.1\\scrutor.6.0.1.nupkg.sha512",
+    "C:\\Users\\HUY THANG\\.nuget\\packages\\sharpziplib\\1.4.2\\sharpziplib.1.4.2.nupkg.sha512",
+    "C:\\Users\\HUY THANG\\.nuget\\packages\\sixlabors.fonts\\1.0.0-beta17\\sixlabors.fonts.1.0.0-beta17.nupkg.sha512",
+    "C:\\Users\\HUY THANG\\.nuget\\packages\\sixlabors.imagesharp\\1.0.4\\sixlabors.imagesharp.1.0.4.nupkg.sha512",
     "C:\\Users\\HUY THANG\\.nuget\\packages\\system.clientmodel\\1.0.0\\system.clientmodel.1.0.0.nupkg.sha512",
     "C:\\Users\\HUY THANG\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\HUY THANG\\.nuget\\packages\\system.collections.immutable\\6.0.0\\system.collections.immutable.6.0.0.nupkg.sha512",

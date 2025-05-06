@@ -1,6 +1,7 @@
 ﻿using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 
@@ -15,7 +16,8 @@ namespace DGDiemRenLuyen.Services.ChildCriterionService
 
         public ChildCriterionUpdateService(
             IChildCriteriaRepository childCriteriaRepository,
-            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            string successMessageDefault = ValidationKeyWords.UPDATE) : base(httpContextAccessor, successMessageDefault)
         {
             _childCriteriaRepository = childCriteriaRepository;
         }
@@ -52,14 +54,14 @@ namespace DGDiemRenLuyen.Services.ChildCriterionService
                 
             }
 
-            if (checkOrderIndexUpdate)
+           /* if (checkOrderIndexUpdate)
             {
                 if (_childCriteriaRepository.ExistsByOrderIndexAndParentCriteriaId
                     (_dataRequest.OrderIndex ?? 1, updateChildCriterion.ParentCriteriaId))
                 {
                     throw new BaseException { Messages = "Thứ tự xuất hiện đã tồn tại." };
                 }
-            }
+            }*/
             
         }
 
@@ -79,6 +81,7 @@ namespace DGDiemRenLuyen.Services.ChildCriterionService
                 _dataResponse = new ChildCriterionResponse
                 {
                     Id = updateChildCriterion.Id,
+                    ParentCriteriaId = updateChildCriterion.ParentCriteriaId,
                     CriteriaName = updateChildCriterion.CriteriaName,
                     MaxScore = updateChildCriterion.MaxScore,
                     OrderIndex = updateChildCriterion.OrderIndex,

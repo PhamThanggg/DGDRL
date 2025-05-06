@@ -10,5 +10,7 @@ namespace DGDiemRenLuyen.Repositories.Interfaces
         bool ExistsByNameAndParentCriteriaId(string name, Guid parentCriteriaId);
 
         bool ExistsByOrderIndexAndParentCriteriaId(int orderIndex, Guid parentCriteriaId);
+
+        void UpdateIsActiveByParentCriteriaId(int? isActive, Guid parentCriteriaId);
     }
 }

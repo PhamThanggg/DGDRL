@@ -1,6 +1,7 @@
 ﻿using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 
@@ -16,7 +17,8 @@ namespace DGDiemRenLuyen.Services.ChildCriterionService
         public ChildCriterionCreateService(
             IChildCriteriaRepository childCriteriaRepository,
             IParentCriteriaRepository parentCriteriaRepository,
-            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            string successMessageDefault = ValidationKeyWords.CREATE) : base(httpContextAccessor, successMessageDefault)
         {
             _childCriteriaRepository = childCriteriaRepository;
             _parentCriteriaRepository = parentCriteriaRepository;
@@ -49,10 +51,10 @@ namespace DGDiemRenLuyen.Services.ChildCriterionService
                 throw new BaseException { Messages = "Tên tiêu chí tồn tại." };
             }
 
-            if(_childCriteriaRepository.ExistsByOrderIndexAndParentCriteriaId(_dataRequest.OrderIndex ?? 1, parentCriterion.Id))
+            /*if(_childCriteriaRepository.ExistsByOrderIndexAndParentCriteriaId(_dataRequest.OrderIndex ?? 1, parentCriterion.Id))
             {
                 throw new BaseException { Messages = "Thứ tự xuất hiện đã tồn tại." };
-            }
+            }*/
         }
 
         public override void P3AccessDatabase()

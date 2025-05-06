@@ -141,3 +141,8 @@ D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\obj\Debug\net8.0\DGDiemRenLuye
 D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\Scrutor.dll
 D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\Microsoft.AspNetCore.Authentication.OpenIdConnect.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\PdfSharpCore.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\ICSharpCode.SharpZipLib.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\SixLabors.Fonts.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\SixLabors.ImageSharp.dll
+D:\ThucTap_HNUE\DRL\DGDiemRenLuyen\DGDiemRenLuyen\bin\Debug\net8.0\de\PdfSharpCore.resources.dll

@@ -90,6 +90,11 @@ namespace DGDiemRenLuyen.Repositories
             _dbContext.Entry(Entity).State = EntityState.Modified;
         }
 
+        public void UpdateRange(List<TEntity> entities)
+        {
+            _dbContext.Set<TEntity>().UpdateRange(entities);
+        }
+
         public bool ExistsBy(Expression<Func<TEntity, bool>> predicate)
         {
             return _dbContext.Set<TEntity>().Any(predicate);

@@ -1,7 +1,9 @@
 ﻿using Azure.Core;
+using DGDiemRenLuyen.Common;
 using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 using DGDiemRenLuyen.Services.UploadFileSrevice;
@@ -39,10 +41,15 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
                 throw new BaseException { Messages = "Chi tiết diểm rèn luyên không tồn tại. ID: " + _dataRequest.Id };
             }
 
-            if (string.IsNullOrEmpty(UserID))
+            // begin authorize
+            if (Role == RoleConstants.SV)
             {
-                throw new BaseException { Messages = "Bạn không có quyền truy cập" };
+                if (UserID != updateCriteriaDetail.ScoreStatus.StudentId)
+                {
+                    throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+                }
             }
+            // end
 
             Time? timeData = _timeRepository.GetCurrentTimeRecords();
 

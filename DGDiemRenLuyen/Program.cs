@@ -6,6 +6,9 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using DTOs.ModelValidation;
 using Microsoft.Extensions.FileProviders;
+using DGDiemRenLuyen.DTOs.Responses;
+using System.Text.Json;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +17,9 @@ builder.Services.AddDbContext<SQLDRLContext>(options =>
 {
     options.UseSqlServer(builder.Configuration["ConnectionStrings:Cnn"]);
 });
+
+// http call api
+builder.Services.AddHttpClient();
 
 // vaidate
 builder.Services.AddControllers(options =>
@@ -35,37 +41,76 @@ builder.Services
 // Add services to the container.
 builder.Services.AddControllers();
 
+// keyclock sso
 var keycloakSettings = builder.Configuration.GetSection("Keycloak");
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+
+// authen jwt
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+
+    options.TokenValidationParameters = new TokenValidationParameters
     {
-        options.Authority = "https://account.hnue.edu.vn/realms/hnue_sso";
-        options.Audience = "account"; 
-        options.RequireHttpsMetadata = false;
-        options.TokenValidationParameters = new TokenValidationParameters
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings["SecretKey"])),
+
+        ClockSkew = TimeSpan.Zero // Không cho lệch thời gian
+    };
+    options.Events = new JwtBearerEvents
+    {
+        OnChallenge = context =>
         {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = "https://account.hnue.edu.vn/realms/hnue_sso",
-            ValidAudience = "account",
-            IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
+            context.HandleResponse(); // Bỏ res mặc định
+            context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+            context.Response.ContentType = "application/json";
+
+            var result = JsonSerializer.Serialize(new ApiResponse<string>
             {
-                // Lấy public key từ Keycloak
-                var client = new HttpClient();
-                var keySetUrl = "https://account.hnue.edu.vn/realms/hnue_sso/protocol/openid-connect/certs";
-                var response = client.GetStringAsync(keySetUrl).Result;
-                var keySet = new JsonWebKeySet(response);
-                return keySet.Keys;
-            }
-        };
-    });
+                StatusCode = StatusCodes.Status401Unauthorized.ToString(),
+                Messages = "Bạn chưa đăng nhập hoặc token không hợp lệ.",
+                Data = null
+            });
+
+            return context.Response.WriteAsync(result);
+        }
+    };
+});
 
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+// 403
+app.Use(async (context, next) =>
+{
+    await next();
+
+    if (context.Response.StatusCode == 403)
+    {
+        context.Response.ContentType = "application/json";
+
+        var result = JsonSerializer.Serialize(new ApiResponse<string>
+        {
+            StatusCode = StatusCodes.Status403Forbidden.ToString(),
+            Messages = "Bạn không có quyền truy cập chức năng này.",
+            Data = null
+        });
+
+        await context.Response.WriteAsync(result);
+    }
+});
 
 app.UseAuthentication();
 

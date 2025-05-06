@@ -13,6 +13,8 @@ namespace DGDiemRenLuyen.Repositories.Interfaces
 
         void Update(TEntity Entity);
 
+        void UpdateRange(List<TEntity> entities);
+
         void Delete<T>(T Id);
 
         void Delete(TEntity Entity);

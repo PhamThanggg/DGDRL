@@ -1,6 +1,7 @@
 ﻿using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
+using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
 
@@ -20,7 +21,8 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
             IScoreStatusRepository scoreStatustatusRepository,
             IChildCriteriaRepository childCriteriaRepository,
             ITimeRepository timeRepository,
-            IHttpContextAccessor httpContextAccessor) : base(httpContextAccessor)
+            IHttpContextAccessor httpContextAccessor,
+            string successMessageDefault = ValidationKeyWords.CREATE) : base(httpContextAccessor, successMessageDefault)
         {
             _criteriaDetailRepository = criteriaDetailRepository;
             _scoreStatusRepository = scoreStatustatusRepository;

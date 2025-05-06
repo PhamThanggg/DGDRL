@@ -1,4 +1,5 @@
-﻿using DGDiemRenLuyen.DTOs.requsets;
+﻿using DGDiemRenLuyen.Common;
+using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.Services.TimeService;
@@ -31,7 +32,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("create")]
         public IActionResult Create([FromBody] TimeRequest timeRequest) {
             ApiResponse<TimeResponse> result = _timeCreateService.Process(timeRequest);
@@ -39,7 +40,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("update")]
         public IActionResult Update([FromBody] TimeRequest timeRequest)
         {
@@ -47,7 +48,7 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [HttpGet("{id}")]
         public IActionResult GetDetail(Guid? id)
         {
@@ -56,7 +57,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("get-list")]
         public IActionResult GetList([FromBody] TimeGetListRequest timeGetListRequest)
         {
@@ -65,7 +66,7 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid? id)
         {

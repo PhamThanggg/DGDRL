@@ -1,10 +1,13 @@
 ﻿using Business.APIBusinessServices.CountryServices;
+using DGDiemRenLuyen.Common;
+using DGDiemRenLuyen.DTOs.HnueApiResponse;
 using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.Services.ChildCriterionService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Net.Http;
 
 namespace DGDiemRenLuyen.Controllers
 {
@@ -32,7 +35,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("create")]
         public IActionResult Create([FromBody] ChildCriterionRequest childCriterionRequest) {
             ApiResponse<ChildCriterionResponse> result = _childCriterionCreateService.Process(childCriterionRequest);
@@ -40,7 +43,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("update")]
         public IActionResult Update([FromBody] ChildCriterionRequest childCriterionRequest)
         {
@@ -48,16 +51,16 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [HttpGet("{id}")]
-        public IActionResult GetDetail(Guid? id)
+        public async Task<IActionResult> GetDetail(Guid? id)
         {
-            ApiResponse<ChildCriterionResponse> result = _childCriterionGetDetailService.Process(id);
+            ApiResponse<ChildCriterionResponse> result =  _childCriterionGetDetailService.Process(id);
             return Ok(result);
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("get-list")]
         public IActionResult GetList([FromBody] ChildCriterionGetListRequest childCriterionGetListRequest)
         {
@@ -66,7 +69,7 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid? id)
         {

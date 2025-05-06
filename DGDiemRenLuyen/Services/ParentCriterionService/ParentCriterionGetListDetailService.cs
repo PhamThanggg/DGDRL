@@ -5,10 +5,10 @@ using DGDiemRenLuyen.Repositories.Interfaces;
 
 namespace DGDiemRenLuyen.Services.ParentCriterionService
 {
-    public class ParentCriterionGetListDetailService : BaseService<ParentCriterionGetListDetailRequest, Task<List<ParentCriterion>>>
+    public class ParentCriterionGetListDetailService : BaseService<ParentCriterionGetListDetailRequest, Task<List<ParentCriterionDto>>>
     {
         private readonly IParentCriteriaRepository _parentCriteriaRepository;
-        private Task<List<ParentCriterion>>? parentCriterions;
+        private Task<List<ParentCriterionDto>>? parentCriterions;
 
         public ParentCriterionGetListDetailService(
             IParentCriteriaRepository parentCriteriaRepository,
@@ -28,7 +28,7 @@ namespace DGDiemRenLuyen.Services.ParentCriterionService
 
         public override void P3AccessDatabase()
         {
-            parentCriterions = _parentCriteriaRepository.GetParentCriteriaByStudentIdAsync(_dataRequest.UserId, _dataRequest.TimeId);
+            parentCriterions = _parentCriteriaRepository.GetParentCriteriaByStudentIdAsync(_dataRequest.scoreId, _dataRequest.TimeId);
             if (parentCriterions == null)
             {
                 throw new BaseException

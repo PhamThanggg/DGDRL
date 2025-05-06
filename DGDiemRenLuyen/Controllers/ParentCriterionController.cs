@@ -1,4 +1,5 @@
 ﻿using Business.APIBusinessServices.CountryServices;
+using DGDiemRenLuyen.Common;
 using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
@@ -18,6 +19,7 @@ namespace DGDiemRenLuyen.Controllers
         private readonly ParentCriterionGetListDetailService _parentCriterionGetListDetailService;
         private readonly ParentCriterionGetListService _parentCriterionGetListService;
         private readonly ParentCriterionDeleteService _parentCriterionDeleteService;
+        private readonly ParentCriterionExportPDFService _parentCriterionExportPDFService;
 
         public ParentCriterionController(
             ParentCriterionCreateService parentCriterionCreateService
@@ -25,7 +27,8 @@ namespace DGDiemRenLuyen.Controllers
             , ParentCriterionGetDetailService parentCriterionGetDetailService
             , ParentCriterionGetListDetailService parentCriterionGetListDetailService
             , ParentCriterionGetListService parentCriterionGetListService
-            , ParentCriterionDeleteService parentCriterionDeleteService)
+            , ParentCriterionDeleteService parentCriterionDeleteService
+            , ParentCriterionExportPDFService parentCriterionExportPDFService)
         {
             _parentCriterionCreateService = parentCriterionCreateService;
             _parentCriterionUpdateService = parentCriterionUpdateService;
@@ -33,10 +36,12 @@ namespace DGDiemRenLuyen.Controllers
             _parentCriterionGetListDetailService = parentCriterionGetListDetailService;
             _parentCriterionGetListService = parentCriterionGetListService;
             _parentCriterionDeleteService = parentCriterionDeleteService;
+            _parentCriterionExportPDFService = parentCriterionExportPDFService;
+            _parentCriterionExportPDFService = parentCriterionExportPDFService;
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("create")]
         public IActionResult Create([FromBody] ParentCriterionRequest parentCriterionRequest) {
             ApiResponse<ParentCriterionResponse> result = _parentCriterionCreateService.Process(parentCriterionRequest);
@@ -44,7 +49,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPut]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("update")]
         public IActionResult Update([FromBody] ParentCriterionRequest parentCriterionRequest)
         {
@@ -52,30 +57,16 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [HttpGet("{id}")]
         public IActionResult GetDetail(Guid? id)
         {
-            var user = HttpContext.User;
-
-            // Lấy sub (ID user)
-            var userId = user.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-
-            // Lấy email
-            var email = user.FindFirst(ClaimTypes.Email)?.Value;
-
-            // Lấy preferred_username
-            var username = user.FindFirst("preferred_username")?.Value;
-
-            // Lấy role từ Keycloak
-            var role = user.FindFirst("roleDB")?.Value;
-
             ApiResponse<ParentCriterionResponse> result = _parentCriterionGetDetailService.Process(id);
             return Ok(result);
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("get-list")]
         public IActionResult GetList([FromBody] ParentCriterionGetListRequest parentCriterionGetListRequest)
         {
@@ -85,7 +76,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("get-list-detail")]
         public IActionResult GetListDetail([FromBody] ParentCriterionGetListDetailRequest parentCriterionGetListDetailRequest)
         {
@@ -94,7 +85,16 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [HttpPost("export-pdf")]
+        public async Task<IActionResult> ExportPDF([FromBody] ParentCriterionGetListDetailRequest request)
+        {
+            var response = _parentCriterionExportPDFService.Process(request); 
+            var fileResult = await response.Data;
+
+            return fileResult;
+        }
+
+        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [HttpDelete("{id}")]
         public IActionResult Delete(Guid? id)
         {

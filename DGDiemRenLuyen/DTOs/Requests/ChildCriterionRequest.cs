@@ -21,7 +21,6 @@ public class ChildCriterionRequest
     [Required]
     public int? OrderIndex { get; set; }
 
-    [Required]
     [MaxLength(255)]
     public string? Note { get; set; }
 
