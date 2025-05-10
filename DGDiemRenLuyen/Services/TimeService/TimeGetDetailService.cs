@@ -50,7 +50,7 @@ namespace DGDiemRenLuyen.Services.TimeService
                 _dataResponse = new TimeResponse
                 {
                     Id = _time.Id,
-                    Semester = _time.Semester,
+                    TermID = _time.TermID,
                     StartYear = _time.StartYear,
                     EndYear = _time.StartYear + 1,
                     StartDate = _time.StartDate,

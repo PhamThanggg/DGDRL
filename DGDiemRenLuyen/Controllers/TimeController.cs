@@ -48,7 +48,7 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = RoleConstants.AdminOrHdt)]
+        [Authorize]
         [HttpGet("{id}")]
         public IActionResult GetDetail(Guid? id)
         {
@@ -56,8 +56,8 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
+        [Authorize]
         [HttpPost]
-        [Authorize(Roles = RoleConstants.AdminOrHdt)]
         [Route("get-list")]
         public IActionResult GetList([FromBody] TimeGetListRequest timeGetListRequest)
         {

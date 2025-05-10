@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using DGDiemRenLuyen.Common;
+﻿using DGDiemRenLuyen.Common;
 using DGDiemRenLuyen.DTOs.Requests.CriteriaDetail;
 using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
@@ -35,7 +34,7 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
 
         public override void P1GenerateObjects()
         {
-            updateCriteriaDetail = _criteriaDetailRepository.GetById<Guid?>(_dataRequest.Id);
+            updateCriteriaDetail = _criteriaDetailRepository.FindById(_dataRequest.Id);
             if(updateCriteriaDetail == null)
             {
                 throw new BaseException { Messages = "Chi tiết diểm rèn luyên không tồn tại. ID: " + _dataRequest.Id };
@@ -68,7 +67,7 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
             {
                 var oldFilePath = updateCriteriaDetail.Proof;
 
-                var filePath = _fileService.UploadPdfAsync(_dataRequest.File).GetAwaiter().GetResult();
+                var filePath = _fileService.UploadPdfAsync(_dataRequest.File, UserID).GetAwaiter().GetResult();
                 updateCriteriaDetail.Proof = filePath;
 
                 if (!string.IsNullOrEmpty(oldFilePath))

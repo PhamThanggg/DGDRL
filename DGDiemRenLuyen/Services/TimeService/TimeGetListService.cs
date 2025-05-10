@@ -38,7 +38,7 @@ namespace DGDiemRenLuyen.Services.TimeService
 
             Expression<Func<Time, bool>> searchCondition = s =>
                 (!_dataRequest.StartYear.HasValue || s.StartYear == _dataRequest.StartYear) &&
-                (!_dataRequest.Semester.HasValue || s.Semester == _dataRequest.Semester);
+                (string.IsNullOrEmpty(_dataRequest.TermID) || s.TermID == _dataRequest.TermID);
 
             _totalRecords = _timeRepository.GetBy(searchCondition).Count();
 
@@ -47,7 +47,7 @@ namespace DGDiemRenLuyen.Services.TimeService
                  .Select(s => new TimeResponse
                  {
                      Id = s.Id,
-                     Semester = s.Semester,
+                     TermID = s.TermID,
                      StartYear = s.StartYear,
                      EndYear = s.StartYear + 1,
                      StartDate = s.StartDate,

@@ -2,7 +2,7 @@
 {
     public class Professor
     {
-        public string? CourseID { get; set; }
+        public string? ProfessorID { get; set; }
         public string? lastName { get; set; }
         public string? firstName { get; set; }
         public string? birthday { get; set; }

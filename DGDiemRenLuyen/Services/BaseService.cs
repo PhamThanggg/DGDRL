@@ -45,6 +45,32 @@ namespace DGDiemRenLuyen.Services
             }
         }
 
+        public string? DepartmentID
+        {
+            get
+            {
+                string department = GetClaimValue(HttpContextAccessor, ClaimConstant.DEPARTMENT);
+                if (!string.IsNullOrEmpty(department))
+                {
+                    return department;
+                }
+                return null;
+            }
+        }
+
+        public string? ClassStudentID
+        {
+            get
+            {
+                string classID = GetClaimValue(HttpContextAccessor, ClaimConstant.CLASS);
+                if (!string.IsNullOrEmpty(classID))
+                {
+                    return classID;
+                }
+                return null;
+            }
+        }
+
         public string? Role
         {
             get

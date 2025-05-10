@@ -6,7 +6,8 @@ namespace DGDiemRenLuyen.DTOs.requsets;
 
 public class TimeGetListRequest : BaseListRequest
 {
-    public int? Semester { get; set; }
+    [RegularExpression("^(HK01|HK02|HK03)$", ErrorMessage = "Chỉ chấp nhận: HK01, HK02, HK03")]
+    public string? TermID { get; set; }
 
     public int? StartYear { get; set; }
 }

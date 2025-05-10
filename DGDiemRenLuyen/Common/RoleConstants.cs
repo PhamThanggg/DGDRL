@@ -11,6 +11,7 @@
 
 
         public const string AdminOrHdt = ADMIN + "," + HDT;
+        public const string SvOrCbl = SV + "," + CBL;
         public const string HdtOrTkOrCvhtOrCbl = HDT + "," + TK + "," + GV + "," + CBL;
     }
 }

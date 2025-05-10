@@ -32,6 +32,8 @@ public partial class SQLDRLContext : DbContext
 
     public virtual DbSet<RoleAssignment> RoleAssignments { get; set; }
 
+    public virtual DbSet<ActiveToken> ActiveTokens { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(_configuration.GetConnectionString("Cnn"));
 

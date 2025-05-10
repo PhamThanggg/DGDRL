@@ -12,6 +12,5 @@ public class ScoreStatusGetListRequest : BaseListRequest
     [MaxLength(255)]
     public string? StudentID { get; set; }
 
-    [Required]
     public Guid? TimeId { get; set; }
 }

@@ -33,7 +33,7 @@ namespace DGDiemRenLuyen.Services.TimeService
                 throw new BaseException { Messages = "Lịch đánh giá điểm rèn luyện không tồn tại." };
             }
 
-            checkSemesterUpdate = _dataRequest.Semester != null && _dataRequest.Semester != updateTime.Semester;
+            checkSemesterUpdate = _dataRequest.TermID != null && _dataRequest.TermID != updateTime.TermID;
             checkStartYearUpdate = _dataRequest.StartYear != null && _dataRequest.StartYear != updateTime.StartYear;
             checkStartDateUpdate = _dataRequest.StartDate.HasValue && _dataRequest.StartDate != updateTime.StartDate;
             checkEndDateUpdate = _dataRequest.EndDate.HasValue && _dataRequest.EndDate != updateTime.EndDate;
@@ -75,7 +75,7 @@ namespace DGDiemRenLuyen.Services.TimeService
             {
                 bool semesterExists = _timeRepository.ExistsBy(pc =>
                     pc.StartYear == _dataRequest.StartYear &&
-                    pc.Semester == _dataRequest.Semester
+                    pc.TermID == _dataRequest.TermID
                 );
 
                 if (semesterExists)
@@ -101,7 +101,7 @@ namespace DGDiemRenLuyen.Services.TimeService
                 _dataResponse = new TimeResponse
                 {
                     Id = updateTime.Id,
-                    Semester = updateTime.Semester,
+                    TermID = updateTime.TermID,
                     StartYear = updateTime.StartYear,
                     EndYear = updateTime.StartYear + 1,
                     StartDate = updateTime.StartDate,

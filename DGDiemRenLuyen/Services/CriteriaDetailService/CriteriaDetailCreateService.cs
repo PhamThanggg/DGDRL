@@ -46,11 +46,6 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
 
         public override void P2PostValidation()
         {
-            if (string.IsNullOrEmpty(UserID))
-            {
-                throw new BaseException { Messages = "Bạn không có quyền truy cập" };
-            }
-
             // kiểm tra thời gian xét có tồn tại k?
             Time? timeData = _timeRepository.GetCurrentTimeRecords();
 
@@ -71,11 +66,17 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
                 throw new BaseException { Messages = "Không tồn tại trạng thái điểm với ID : " + _dataRequest.ScoreId };
             }
 
+            // check trang thai diem co phai cua chinh minh
+            if(UserID != scoreStatus.StudentId)
+            {
+                throw new BaseException { Messages = "Bạn không thể sử dụng trạng thái điểm với ID : " + _dataRequest.ScoreId };
+            }
+
             // check tồn tại {1 tài khoản trong 1 đợt xét chỉ tạo 1 lần}
             CriteriaDetail? criteriaDetail = _criteriaDetailRepository.FindByChildCriterieIdAndScoreId(childCriterion.Id, scoreStatus.Id);
             if(criteriaDetail != null)
             {
-                throw new BaseException { Messages = "Vui lòng nhập ID để có thể cập nhật"};
+                throw new BaseException { Messages = "Điểm mục này đã tồn tại"};
             }
 
             // check giới hạn điểm tiêu chí con

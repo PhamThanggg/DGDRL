@@ -41,7 +41,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPut]
-        [Authorize(Roles = RoleConstants.AdminOrHdt)]
+        /*[Authorize(Roles = RoleConstants.AdminOrHdt)]*/
         [Route("update")]
         public IActionResult Update([FromBody] RoleAssignmentRequest roleAssignmentRequest)
         {

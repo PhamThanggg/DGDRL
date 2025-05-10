@@ -4,5 +4,7 @@
     {
         public List<Guid> Ids { get; set; } = new();
         public int Status { get; set; }
+
+        public Guid TimeId { get; set; }
     }
 }

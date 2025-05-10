@@ -36,8 +36,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
             int skipRows = _dataRequest.PageSize.Value * (_dataRequest.PageIndex.Value - 1);
 
             Expression<Func<ScoreStatus, bool>> searchCondition = s =>
-                (s.StudentId == UserID) &&
-                (!_dataRequest.TimeId.HasValue || s.TimeId == _dataRequest.TimeId);
+                (s.StudentId == UserID);
 
             _totalRecords = _scoreStatusRepository.GetBy(searchCondition).Count();
 
@@ -47,6 +46,8 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
                  {
                      ScoreStatusId = s.Id,
                      StudentID = s.StudentId,
+                     DepartmentID = s.DepartmentId,
+                     ClassStudentID = s.ClassStudentId,
                      TimeId = s.TimeId,
                      Status = s.Status,
                      SeductedPoint = s.SeductedPoint,

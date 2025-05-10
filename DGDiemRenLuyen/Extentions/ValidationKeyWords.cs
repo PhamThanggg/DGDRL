@@ -9,6 +9,9 @@
 
 
 
-        public const string ACCESS_DENIED = "Bạn không có quyền";
+        public const string ACCESS_DENIED = "Bạn không có quyền chỉnh sửa";
+        public const string VALID_TOKEN = "Token không hợp lệ hoặc đã bị thay đổi!";
+
+        public const string SOCRE_STATUS = "Trạng thái duyệt không hợp lệ.";
     }
 }

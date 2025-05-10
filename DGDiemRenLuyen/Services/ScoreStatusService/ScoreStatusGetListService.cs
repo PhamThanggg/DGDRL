@@ -2,24 +2,32 @@
 using DGDiemRenLuyen.DTOs.requsets;
 using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.DTOs.Responses.Students;
+using DGDiemRenLuyen.Extentions;
+using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
+using DGDiemRenLuyen.Services.AuthService;
 
 namespace DGDiemRenLuyen.Services.ScoreStatusService
 {
     public class ScoreStatusGetListService : BaseService<ScoreStatusGetListRequest, PageResponse<List<StudentResponse>>>
     {
         private readonly IScoreStatusRepository _scoreStatusRepository;
+        private readonly ITimeRepository _timeRepository;
         private readonly ApiClientService _apiClientService;
+        private readonly AuthService.AuthService _authService;
         private List<StudentResponse> _studentListResponses;
+        private Time _time = null;
         private int _totalRecords;
 
         public ScoreStatusGetListService(
             IScoreStatusRepository scoreStatusRepository,
             IHttpContextAccessor httpContextAccessor,
-            ApiClientService apiClientService) : base(httpContextAccessor)
+            ApiClientService apiClientService,
+            AuthService.AuthService authService) : base(httpContextAccessor)
         {
             _scoreStatusRepository = scoreStatusRepository;
             _apiClientService = apiClientService;
+            _authService = authService;
         }
 
         public override void P1GenerateObjects()
@@ -30,7 +38,40 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
 
         public override void P2PostValidation()
         {
-            
+
+            // begin authorize
+            string RoleTK = Role;
+            // CBL chi sua lop phu trach
+            if (RoleTK == RoleConstants.CBL && ClassStudentID != _dataRequest.ClassStudentID)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+
+            // GV chi sua lop phu trach
+            if (RoleTK == RoleConstants.GV)
+            {
+                _time = _timeRepository.GetById(_dataRequest.TimeId);
+                if(_time == null)
+                {
+                    throw new BaseException { Messages = "Thời gian đánh giá điểm không tồn tại!" };
+                }
+                var listClass = _authService.GetClasses(
+                    UserID, _time.TermID
+                    , _time.StartYear + "-" + _time.EndYear);
+
+                if (!listClass.Contains(_dataRequest.ClassStudentID))
+                {
+                    throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+                }
+            }
+
+
+            // TK chi sua khoa phu trach
+            if (RoleTK == RoleConstants.TK && DepartmentID != _dataRequest.DepartmentID)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            // end authorize
         }
 
         public override void P3AccessDatabase()
@@ -98,28 +139,3 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
         }
     }
 }
-
-
-
-/* int skipRows = _dataRequest.PageSize.Value * (_dataRequest.PageIndex.Value - 1);
-
-            Expression<Func<ScoreStatus, bool>> searchCondition = s =>
-                (string.IsNullOrEmpty(_dataRequest.StudentID) || s.StudentId == _dataRequest.StudentID) &&
-                (!_dataRequest.TimeId.HasValue || s.TimeId == _dataRequest.TimeId);
-
-            _totalRecords = _scoreStatusRepository.GetBy(searchCondition).Count();
-
-            _listparentCriterion = _scoreStatusRepository
-                 .GetBy(searchCondition)
-                 .Select(s => new ScoreStatusResponse
-                 {
-                     ScoreStatusId = s.Id,
-                     StudentID = s.StudentId,
-                     TimeId = s.TimeId,
-                     Status = s.Status,
-                     CreatedAt = s.CreatedAt,
-                     UpdatedAt = s.UpdatedAt,
-                 })
-                 .Skip(skipRows)
-                 .Take(_dataRequest.PageSize.Value)
-                 .ToList();*/

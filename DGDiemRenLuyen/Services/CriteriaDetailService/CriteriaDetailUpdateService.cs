@@ -5,6 +5,7 @@ using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.Extentions;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
+using DGDiemRenLuyen.Services.AuthService;
 
 namespace DGDiemRenLuyen.Services.CriteriaDetailService
 {
@@ -13,6 +14,7 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
         private readonly ICriteriaDetailRepository _criteriaDetailRepository;
         private readonly IChildCriteriaRepository _childCriteriaRepository;
         private readonly ITimeRepository _timeRepository;
+        private readonly AuthService.AuthService _authService;
      
         private CriteriaDetail? updateCriteriaDetail;
         private Guid newID = Guid.NewGuid();
@@ -25,66 +27,111 @@ namespace DGDiemRenLuyen.Services.CriteriaDetailService
             ICriteriaDetailRepository criteriaDetailRepository,
             IChildCriteriaRepository childCriteriaRepository,
             ITimeRepository timeRepository,
+            AuthService.AuthService authService,
             IHttpContextAccessor httpContextAccessor,
             string successMessageDefault = ValidationKeyWords.UPDATE) : base(httpContextAccessor, successMessageDefault)
         {
             _criteriaDetailRepository = criteriaDetailRepository;
             _childCriteriaRepository = childCriteriaRepository;
             _timeRepository = timeRepository;
+            _authService = authService;
         }
 
         public override void P1GenerateObjects()
         {
-            updateCriteriaDetail = _criteriaDetailRepository.GetById<Guid?>(_dataRequest.Id);
+            updateCriteriaDetail = _criteriaDetailRepository.FindById(_dataRequest.Id);
             if(updateCriteriaDetail == null)
             {
                 throw new BaseException { Messages = "Chi tiết diểm rèn luyên không tồn tại. ID: " + _dataRequest.Id };
             }
 
-            // begin authorize
-            if(Role == RoleConstants.SV)
-            {
-                if(UserID != updateCriteriaDetail.ScoreStatus.StudentId)
-                {
-                    throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
-                }
-            }
-            // end
-
-
             checkStudentScoreUpdate = _dataRequest.StudentScore != null && _dataRequest.StudentScore != updateCriteriaDetail.StudentScore;
             checkMoniterScoreUpdate = _dataRequest.MoniterScore != null && _dataRequest.MoniterScore != updateCriteriaDetail.MoniterScore;
             checkTeacherScoreUpdate = _dataRequest.TeacherScore != null && _dataRequest.TeacherScore != updateCriteriaDetail.TeacherScore;
-
-            // chưa phân quyền {chỉ đúng người mới sửa điểm...}
-            updateCriteriaDetail.Note = _dataRequest.Note ?? updateCriteriaDetail.Note;
-            if (Role == RoleConstants.SV)
-            {
-                updateCriteriaDetail.StudentScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
-                updateCriteriaDetail.MoniterScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
-                updateCriteriaDetail.TeacherScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
-            }
-            else if(Role == RoleConstants.CBL)
-            {
-                updateCriteriaDetail.MoniterScore = _dataRequest.MoniterScore ?? updateCriteriaDetail.MoniterScore;
-                updateCriteriaDetail.TeacherScore = _dataRequest.MoniterScore ?? updateCriteriaDetail.MoniterScore;
-            }
-            else if(Role == RoleConstants.GV)
-            {
-                updateCriteriaDetail.TeacherScore = _dataRequest.TeacherScore ?? updateCriteriaDetail.TeacherScore;
-            }
-
         }
 
         public override void P2PostValidation()
         {
             Time? timeData = _timeRepository.GetCurrentTimeRecords();
-
             if (timeData == null)
             {
                 throw new BaseException { Messages = "Đã hết thời đánh giá điểm rèn luyện!" };
             }
 
+            // begin authorize
+            string RoleTK = Role;
+            if (RoleTK == RoleConstants.SV && UserID != updateCriteriaDetail.ScoreStatus.StudentId)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+
+            // Trang thai
+            if (updateCriteriaDetail.ScoreStatus.Status >= ScoreStatusConstants.SV && RoleTK == RoleConstants.SV)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            else if (updateCriteriaDetail.ScoreStatus.Status >= ScoreStatusConstants.GV && RoleTK == RoleConstants.GV)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            else if (updateCriteriaDetail.ScoreStatus.Status >= ScoreStatusConstants.CBL && RoleTK == RoleConstants.CBL)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+            else if (updateCriteriaDetail.ScoreStatus.Status >= ScoreStatusConstants.TK && RoleTK == RoleConstants.TK)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+
+            if (RoleTK == RoleConstants.SV)
+            {
+                updateCriteriaDetail.StudentScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+                updateCriteriaDetail.MoniterScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+                updateCriteriaDetail.TeacherScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+            }
+            // CBL chi sua lop phu trach
+            else if (RoleTK == RoleConstants.CBL)
+            {
+                if (ClassStudentID != updateCriteriaDetail.ScoreStatus.ClassStudentId)
+                {
+                    throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+                }
+                if(RoleTK == updateCriteriaDetail.ScoreStatus.StudentId)
+                {
+                    updateCriteriaDetail.StudentScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+                    updateCriteriaDetail.MoniterScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+                    updateCriteriaDetail.TeacherScore = _dataRequest.StudentScore ?? updateCriteriaDetail.StudentScore;
+                }
+                else
+                {
+                    updateCriteriaDetail.MoniterScore = _dataRequest.MoniterScore ?? updateCriteriaDetail.MoniterScore;
+                    updateCriteriaDetail.TeacherScore = _dataRequest.MoniterScore ?? updateCriteriaDetail.MoniterScore;
+                }
+            }
+            // GV chi sua lop phu trach
+            else if (RoleTK == RoleConstants.GV)
+            {
+                var listClass = _authService.GetClasses(
+                    UserID, timeData.TermID
+                    , timeData.StartYear + "-" + timeData.EndYear);
+
+                if (!listClass.Contains(updateCriteriaDetail.ScoreStatus.ClassStudentId))
+                {
+                    throw new BaseException { Messages = "Không có quyền cập nhật lớp này." };
+                }
+                updateCriteriaDetail.TeacherScore = _dataRequest.TeacherScore ?? updateCriteriaDetail.TeacherScore;
+            }
+
+            // TK chi sua khoa phu trach
+            if (RoleTK == RoleConstants.TK && DepartmentID != updateCriteriaDetail.ScoreStatus.DepartmentId)
+            {
+                throw new BaseException { Messages = ValidationKeyWords.ACCESS_DENIED };
+            }
+
+            updateCriteriaDetail.Note = _dataRequest.Note ?? updateCriteriaDetail.Note;
+            // end
+
+            
             ChildCriterion? childCriterion = _childCriteriaRepository.GetChildCriteriaByIdAndStatus(updateCriteriaDetail.ChildCriteriaId, 1);
             if (childCriterion == null)
             {

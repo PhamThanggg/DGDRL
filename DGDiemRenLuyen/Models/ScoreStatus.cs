@@ -14,6 +14,14 @@ public partial class ScoreStatus : BaseEntity
     [StringLength(255)]
     public string? StudentId { get; set; }
 
+    [Column("departmentId")]
+    [StringLength(30)]
+    public string? DepartmentId { get; set; }
+
+    [Column("classStudentId")]
+    [StringLength(30)]
+    public string? ClassStudentId { get; set; }
+
     [Column("timeId")]
     public Guid TimeId { get; set; }
 

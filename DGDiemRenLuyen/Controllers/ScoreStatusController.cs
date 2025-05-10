@@ -13,25 +13,25 @@ namespace DGDiemRenLuyen.Controllers
     [Route("api/score-status")]   
     public class ScoreStatusController : ControllerBase
     {
-        private readonly ScoreStatusCreateService _scoreStatusCreateService;
         private readonly ScoreStatusUpdateService _scoreStatusUpdateService;
         private readonly ScoreStatusUpdateListService _scoreStatusUpdateListService;
         private readonly ScoreStatusGetListService _scoreStatusGetListService;
         private readonly ScoreStatusGetDetailService _scoreStatusGetDetailService;
         private readonly ScoreStatusDeleteService _scoreStatusDeleteService;
+        private readonly ScoreStatusGetMyListService _scoreStatusGetMyListService;
 
         public ScoreStatusController(
-            ScoreStatusCreateService scoreStatusCreateService
-            , ScoreStatusUpdateService scoreStatusUpdateService
+            ScoreStatusUpdateService scoreStatusUpdateService
             , ScoreStatusGetListService scoreStatusGetListService
             , ScoreStatusGetDetailService scoreStatusGetDetailService
-            , ScoreStatusDeleteService scoreStatusDeleteService)
+            , ScoreStatusDeleteService scoreStatusDeleteService
+            ,ScoreStatusGetMyListService scoreStatusGetMyListService)
         {
-            _scoreStatusCreateService = scoreStatusCreateService;
             _scoreStatusUpdateService = scoreStatusUpdateService;
             _scoreStatusGetListService = scoreStatusGetListService;
             _scoreStatusGetDetailService = scoreStatusGetDetailService;
             _scoreStatusDeleteService = scoreStatusDeleteService;
+            _scoreStatusGetMyListService = scoreStatusGetMyListService;
         }
 
         /*[HttpPost]
@@ -61,7 +61,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+        [Authorize(Roles = RoleConstants.SvOrCbl)]
         public IActionResult GetDetail([FromBody] ScoreStatusRequest scoreStatusRequest)
         {
             ApiResponse<StudentResponse> result = _scoreStatusGetDetailService.Process(scoreStatusRequest);
@@ -74,6 +74,16 @@ namespace DGDiemRenLuyen.Controllers
         public IActionResult GetList([FromBody] ScoreStatusGetListRequest scoreStatusGetListRequest)
         {
             var result = _scoreStatusGetListService.Process(scoreStatusGetListRequest);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Authorize(Roles = RoleConstants.SvOrCbl)]
+        [Route("get-my-list")]
+        public IActionResult GetMyList([FromBody] ScoreStatusGetListRequest scoreStatusGetListRequest)
+        {
+            var result = _scoreStatusGetMyListService.Process(scoreStatusGetListRequest);
 
             return Ok(result);
         }

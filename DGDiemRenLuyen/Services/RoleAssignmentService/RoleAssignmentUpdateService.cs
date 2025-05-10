@@ -25,7 +25,7 @@ namespace DGDiemRenLuyen.Services.RoleAssignmentService
             updateRoleAssignment = _roleAssignmentRepository.GetByObjectId(_dataRequest.ObjectId);
             if(updateRoleAssignment == null)
             {
-                throw new BaseException { Messages = "Tiêu chí không tồn tại." };
+                throw new BaseException { Messages = "ID không tồn tại." };
             }
 
             updateRoleAssignment.ObjectType = _dataRequest.ObjectType ?? updateRoleAssignment.ObjectType;

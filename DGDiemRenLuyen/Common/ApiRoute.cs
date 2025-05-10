@@ -6,8 +6,10 @@ namespace DGDiemRenLuyen.Common
     {
         public const string baseUrl = "https://localhost:44328/api/";
 
-        public const string getProfessorList = "course/get-list";
 
+        // professor
+        public const string getProfessorList = "professor/get-list";
+        public const string getDetailProfessor = "professor/";
 
         // student
         public const string getDetailStudent = "student/";

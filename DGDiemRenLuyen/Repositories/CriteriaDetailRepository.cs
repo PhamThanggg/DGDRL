@@ -1,6 +1,7 @@
 ﻿using DGDiemRenLuyen.Data;
 using DGDiemRenLuyen.Models;
 using DGDiemRenLuyen.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DGDiemRenLuyen.Repositories
 {
@@ -17,6 +18,13 @@ namespace DGDiemRenLuyen.Repositories
         {
             return _dbContext.CriteriaDetails
                 .FirstOrDefault(x => x.ChildCriteriaId == childCrteriaId && x.ScoreId == scoreId);
+        }
+
+        public CriteriaDetail? FindById(Guid id)
+        {
+            return _dbContext.CriteriaDetails
+                .Include(s => s.ScoreStatus)
+                .FirstOrDefault(cd => cd.Id == id);
         }
 
         public List<CriteriaDetail>? FindByScoreIdAndChildCriteriaParentCriterieId(Guid scoreStatusId, Guid parentCriteriaId)

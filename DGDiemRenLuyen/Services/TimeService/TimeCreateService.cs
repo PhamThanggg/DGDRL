@@ -26,7 +26,7 @@ namespace DGDiemRenLuyen.Services.TimeService
             newTime = new Time
             {
                 Id = newID,
-                Semester = _dataRequest.Semester,
+                TermID = _dataRequest.TermID,
                 StartYear = _dataRequest.StartYear,
                 EndYear = _dataRequest.StartYear + 1,
                 StartDate = _dataRequest.StartDate,
@@ -56,7 +56,7 @@ namespace DGDiemRenLuyen.Services.TimeService
 
             bool semesterExists = _timeRepository.ExistsBy(pc =>
                 pc.StartYear == _dataRequest.StartYear &&
-                pc.Semester == _dataRequest.Semester
+                pc.TermID == _dataRequest.TermID
             );
 
             if (semesterExists)
@@ -78,7 +78,7 @@ namespace DGDiemRenLuyen.Services.TimeService
                 _dataResponse = new TimeResponse
                 {
                     Id = newTime.Id,
-                    Semester = newTime.Semester,
+                    TermID = newTime.TermID,
                     StartYear = newTime.StartYear,
                     EndYear = newTime.StartYear + 1,
                     StartDate = newTime.StartDate,

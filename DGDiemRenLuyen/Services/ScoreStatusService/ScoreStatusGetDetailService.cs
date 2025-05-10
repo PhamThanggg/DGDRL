@@ -1,7 +1,5 @@
 ﻿using DGDiemRenLuyen.Common;
-using DGDiemRenLuyen.DTOs.HnueApiResponse;
 using DGDiemRenLuyen.DTOs.requsets;
-using DGDiemRenLuyen.DTOs.responses;
 using DGDiemRenLuyen.DTOs.Responses;
 using DGDiemRenLuyen.DTOs.Responses.Students;
 using DGDiemRenLuyen.Models;
@@ -37,10 +35,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
 
         public override void P2PostValidation()
         {
-            if (string.IsNullOrEmpty(UserID))
-            {
-                throw new BaseException { Messages = "Bạn không có quyền truy cập" };
-            }
+           
         }
 
         public override void P3AccessDatabase()
@@ -49,7 +44,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
                 ?? throw new BaseException { Messages = "Thời gian không tồn tại!" };
 
             _scoreStatus ??= _scoreStatusRepository.FindByStudentIdAndTimeId(UserID, _dataRequest.TimeId)
-                ?? _scoreStatusCreateService.create(UserID);
+                ?? _scoreStatusCreateService.create(UserID, DepartmentID, ClassStudentID);
 
             string url = ApiRoute.baseUrl + ApiRoute.getDetailStudent + UserID;
 
@@ -69,7 +64,9 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
             if(_scoreStatus != null)
             {
                 _dataResponse.ScoreStatusId = _scoreStatus.Id;
-                _dataRequest.StudentId= _scoreStatus.StudentId;
+                _dataResponse.ClassStudentID = _scoreStatus.StudentId;
+                _dataResponse.DepartmentID = _scoreStatus.DepartmentId;
+                _dataResponse.ClassStudentID = _scoreStatus.ClassStudentId;
                 _dataResponse.TimeId = _scoreStatus.TimeId;
                 _dataResponse.Status = _scoreStatus.Status;
                 _dataResponse.SeductedPoint = _scoreStatus.SeductedPoint;

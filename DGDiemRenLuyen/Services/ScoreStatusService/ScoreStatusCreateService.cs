@@ -21,7 +21,7 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
             _timeRepository = timeRepository;
         }
 
-        public ScoreStatus create(string UserID)
+        public ScoreStatus create(string UserID, string DepartmentID, string ClassID)
         {
             // kiểm tra thời gian xét có tồn tại k?
             Time? timeData = _timeRepository.GetCurrentTimeRecords();
@@ -36,6 +36,8 @@ namespace DGDiemRenLuyen.Services.ScoreStatusService
             {
                 Id = newID,
                 StudentId = UserID,
+                DepartmentId = DepartmentID,
+                ClassStudentId = ClassID,
                 TimeId = timeData.Id,
                 Status = 0,
                 SeductedPoint = 0,

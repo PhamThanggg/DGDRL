@@ -4,7 +4,7 @@ public partial class TimeResponse
 {
     public Guid Id { get; set; }
 
-    public int? Semester { get; set; }
+    public string? TermID { get; set; }
 
     public int? StartYear { get; set; }
 

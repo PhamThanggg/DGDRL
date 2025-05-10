@@ -1,13 +1,14 @@
-﻿
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DGDiemRenLuyen.DTOs.responses;
+﻿namespace DGDiemRenLuyen.DTOs.responses;
 
 public class ScoreStatusResponse
 {
     public Guid ScoreStatusId { get; set; }
 
     public string StudentID { get; set; }
+
+    public string? DepartmentID { get; set; }
+
+    public string? ClassStudentID { get; set; }
 
     public Guid TimeId { get; set; }
 
@@ -22,4 +23,5 @@ public class ScoreStatusResponse
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
+
 }

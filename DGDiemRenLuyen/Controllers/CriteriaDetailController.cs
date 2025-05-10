@@ -32,7 +32,7 @@ namespace DGDiemRenLuyen.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = RoleConstants.SV)]
+        [Authorize(Roles = RoleConstants.SvOrCbl)]
         [Route("create")]
         public IActionResult Create([FromBody] CriteriaDetailRequest criteriaDetailRequest) {
             ApiResponse<CriteriaDetailResponse> result = _criteriaDetailCreateService.Process(criteriaDetailRequest);
@@ -48,7 +48,7 @@ namespace DGDiemRenLuyen.Controllers
             return Ok(result);
         }
 
-        [Authorize(Roles = RoleConstants.SV)]
+        [Authorize(Roles = RoleConstants.SvOrCbl)]
         [HttpPost("upload-proof")]
         public async Task<IActionResult> UploadCriteriaDetail([FromForm] CriteriaDetailUploadRequest request)
         {
@@ -82,7 +82,5 @@ namespace DGDiemRenLuyen.Controllers
 
             return Ok(result);
         }*/
-
-
     }
 }

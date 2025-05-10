@@ -7,5 +7,7 @@ namespace DGDiemRenLuyen.Repositories.Interfaces
         CriteriaDetail? FindByChildCriterieIdAndScoreId(Guid childCrteriaId, Guid scoreId);
 
         List<CriteriaDetail>? FindByScoreIdAndChildCriteriaParentCriterieId(Guid scoreStatusId, Guid parentCriteriaId);
+
+        CriteriaDetail? FindById(Guid id);
     }
 }

@@ -13,8 +13,8 @@ public partial class Time : BaseEntity
     [Column("id")]
     public Guid Id { get; set; }
 
-    [Column("semester")]
-    public int? Semester { get; set; }
+    [Column("termID")]
+    public string? TermID { get; set; }
 
     [Column("startYear")]
     public int? StartYear { get; set; }

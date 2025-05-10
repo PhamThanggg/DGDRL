@@ -15,9 +15,9 @@ public class CriteriaDetailResponse
 
     public int? StudentScore { get; set; }
 
-    public int? TeacherScore { get; set; }
-
     public int? MoniterScore { get; set; }
+
+    public int? TeacherScore { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

@@ -9,6 +9,8 @@ using Microsoft.Extensions.FileProviders;
 using DGDiemRenLuyen.DTOs.Responses;
 using System.Text.Json;
 using System.Text;
+using System.Security.Claims;
+using DGDiemRenLuyen.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,6 +72,18 @@ builder.Services.AddAuthentication(options =>
     };
     options.Events = new JwtBearerEvents
     {
+        OnTokenValidated = context =>
+        {
+            var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+            var tokenType = claimsIdentity?.FindFirst(ClaimConstant.TYP)?.Value;
+            if (tokenType != "access")
+            {
+                context.Fail(ValidationKeyWords.VALID_TOKEN);
+            }
+
+            return Task.CompletedTask;
+        },
+
         OnChallenge = context =>
         {
             context.HandleResponse(); // Bỏ res mặc định
@@ -79,7 +93,7 @@ builder.Services.AddAuthentication(options =>
             var result = JsonSerializer.Serialize(new ApiResponse<string>
             {
                 StatusCode = StatusCodes.Status401Unauthorized.ToString(),
-                Messages = "Bạn chưa đăng nhập hoặc token không hợp lệ.",
+                Messages = ValidationKeyWords.VALID_TOKEN,
                 Data = null
             });
 

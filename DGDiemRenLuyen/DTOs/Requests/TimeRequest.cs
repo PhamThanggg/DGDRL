@@ -7,7 +7,8 @@ public partial class TimeRequest
     public Guid Id { get; set; }
 
     [Required]
-    public int? Semester { get; set; }
+    [RegularExpression("^(HK01|HK02|HK03)$", ErrorMessage = "Chỉ chấp nhận: HK01, HK02, HK03")]
+    public string? TermID { get; set; }
 
     [Required]
     public int? StartYear { get; set; }
